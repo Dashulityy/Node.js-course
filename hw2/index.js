@@ -7,7 +7,7 @@ const PORT = 3000;
 let connections = [];
 app.get("/date", (req, res, next) => {
     res.setHeader("Content-Type", "text/html; charset=utf-8");
-    res.setHeader("Transfer-Encoding", "chunked"); // https://en.wikipedia.org/wiki/Chunked_transfer_encoding
+    res.setHeader("Transfer-Encoding", "chunked");
     connections.push(res);
 });
 
