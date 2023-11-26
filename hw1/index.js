@@ -36,7 +36,7 @@ const config = {
 }
 
 const directory = process.argv[2] //папка, в которой хотим выполнить
-const newDirectory = 'allFilesSort'; //new
+const newDirectory = 'allFilesSort'; 
 const needtoDelete = process.argv[3];
 if(!directory){
     console.log("Укажите папку для сортировки")
@@ -48,9 +48,9 @@ if(!needtoDelete){
 }
 
 if(directory && needtoDelete){
-    fs.mkdirSync(newDirectory); //new
+    fs.mkdirSync(newDirectory); 
     [...config.titleDirs, {directory: "other"}].map(d => {
-        const titleDir = `${newDirectory}/${d.directory}` //new
+        const titleDir = `${newDirectory}/${d.directory}` 
         if(!fs.existsSync(titleDir)){
             fs.mkdirSync(titleDir)
         }
@@ -65,8 +65,8 @@ if(directory && needtoDelete){
                 return;
             }
             const { directory: targetDir = "other" } = config.titleDirs.find(dir => dir.title == titleFirstSymbol) || {}
-            const fromPath = path.join(__dirname, directory, file) //new
-            const toPath = path.join(__dirname, newDirectory, targetDir, file) //new
+            const fromPath = path.join(__dirname, directory, file) 
+            const toPath = path.join(__dirname, newDirectory, targetDir, file) 
     
             fs.rename(fromPath, toPath, function(err) {
                 if(err){
@@ -76,7 +76,7 @@ if(directory && needtoDelete){
         });
         if( needtoDelete == 'y'){
             fs.rmdir(directory, err => {
-                if(err) throw err; // не удалось удалить папку
+                if(err) throw err; 
              });
         }
     })();
