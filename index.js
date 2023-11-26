@@ -36,34 +36,48 @@ const config = {
 }
 
 const directory = process.argv[2] //папка, в которой хотим выполнить
+const newDirectory = 'allFilesSort'; //new
+const needtoDelete = process.argv[3];
 if(!directory){
     console.log("Укажите папку для сортировки")
     return;
 }
+if(!needtoDelete){
+    console.log("Укажите нужно ли удалять исходную папку (y/n)")
+    return;
+}
 
-[...config.titleDirs, {directory: "other"}].map(d => {
-    const titleDir = `${directory}/${d.directory}`
-    if(!fs.existsSync(titleDir)){
-        fs.mkdirSync(titleDir)
-    }
-});
-
-(async () => {
-    const files = await readdir(directory)
-    files.forEach(file => {
-        const titleFirstSymbol = path.basename(file)[0].toLowerCase();
-        console.log(titleFirstSymbol)
-        if (!titleFirstSymbol){
-            return;
+if(directory && needtoDelete){
+    fs.mkdirSync(newDirectory); //new
+    [...config.titleDirs, {directory: "other"}].map(d => {
+        const titleDir = `${newDirectory}/${d.directory}` //new
+        if(!fs.existsSync(titleDir)){
+            fs.mkdirSync(titleDir)
         }
-        const { directory: targetDir = "other" } = config.titleDirs.find(dir => dir.title == titleFirstSymbol) || {}
-        const fromPath = path.join(__dirname, directory, file)
-        const toPath = path.join(__dirname, directory, targetDir, file)
-
-        fs.rename(fromPath, toPath, function(err) {
-            if(err){
-                throw err;
-            }
-        });
     });
-})();
+    
+    (async () => {
+        const files = await readdir(directory)
+        files.forEach(file => {
+            const titleFirstSymbol = path.basename(file)[0].toLowerCase();
+            console.log(titleFirstSymbol)
+            if (!titleFirstSymbol){
+                return;
+            }
+            const { directory: targetDir = "other" } = config.titleDirs.find(dir => dir.title == titleFirstSymbol) || {}
+            const fromPath = path.join(__dirname, directory, file) //new
+            const toPath = path.join(__dirname, newDirectory, targetDir, file) //new
+    
+            fs.rename(fromPath, toPath, function(err) {
+                if(err){
+                    throw err;
+                }
+            });
+        });
+        if( needtoDelete == 'y'){
+            fs.rmdir(directory, err => {
+                if(err) throw err; // не удалось удалить папку
+             });
+        }
+    })();
+}
